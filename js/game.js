@@ -33,21 +33,21 @@ document.addEventListener('DOMContentLoaded', () => {
         if (oldExampleText) {
             oldExampleText.classList.remove('show');
         }
-
+    
         example.innerHTML = ''; 
         example.appendChild(exampleText);
-
+    
         setTimeout(() => {
-            exampleText.classList.add('show');
+            exampleText.classList.add('fade-in');
         }, 10);
-
+    
         currentExample.textContent = `Current: ${current.number} × ${current.multiplier} = ?`;
         nextExample.textContent = `Next: ${examples[currentExampleIndex + 1] ? `${examples[currentExampleIndex + 1].number} × ${examples[currentExampleIndex + 1].multiplier} = ?` : 'End'}`;
-
+    
         if (currentState === 0) {
             cubeContainer.innerHTML = '';
         }
-
+    
         if (currentState !== null) {
             setTimeout(() => {
                 currentState = null;
