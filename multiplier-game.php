@@ -28,24 +28,17 @@ add_action('wp_enqueue_scripts', 'multiplier_game_enqueue_scripts');
 function multiplier_game_shortcode() {
     ob_start(); ?>
         <div class="game-container">
-            <div class="gamebar">
-                <h3>Examples</h3>
-                <div class="current" id="currentExample">Current: 2 × 1 = ?</div>
-                <div class="next" id="nextExample">Next: 2 × 2 = ?</div>
-                <div class="progress-bar" id="progressBar">
-                    <button id="prevExample">Previous</button>
-                    <button id="nextExampleBtn">Next</button>
+            <div class="game-columns">
+                <div class="column left-column">
+                    <div class="example-container"></div>
+                </div>
+        
+                <div class="column right-column">
+                    <div class="cubes-container"></div>
                 </div>
             </div>
-            <div class="game">
-                <div class="example" id="example">2 × 1 = ?</div>
-                <div class="input-container">
-                    <input type="number" id="answer" placeholder="Enter your answer">
-                    <button id="submit" disabled>Check</button>
-                </div>
-                <div class="block-container" id="cubeContainer"></div>
-                <button id="hintButton">Get Hint</button>
-            </div>
+        
+            <button id="submit-btn" class="submit-btn">Done</button>
         </div>
     <?php return ob_get_clean();
 }

@@ -1,193 +1,101 @@
-/* General Layout */
+/* General layout */
 body {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    min-height: 100vh;
-    transition: all 0.3s ease;
-}
-
-/* Gamebar Styles */
-.gamebar {
-    width: 250px;
-    margin-right: 20px;
-    padding: 20px;
-    background-color: #e6f7ff;
-    border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
-}
-.gamebar h3 {
-    font-size: 18px;
-    margin-bottom: 10px;
-    text-align: center;
-}
-.gamebar .current,
-.gamebar .next {
-    font-size: 16px;
-    margin-bottom: 15px;
-}
-.status {
-    font-size: 16px;
-    margin-top: 10px;
-    text-align: center;
-}
-.progress-bar {
+    font-family: Arial, sans-serif;
     display: flex;
     justify-content: space-between;
-    margin-top: 20px;
-    transition: all 0.3s ease;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f1f1f1;
+    flex-direction: column;
 }
-
-/* Button Styles */
-button {
-    font-size: 16px;
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    background-color: transparent;
-    transition: background-color 0.3s, transform 0.3s ease;
-}
-button:disabled {
-    background-color: #A9A9A9;
-    cursor: not-allowed;
-}
-button:hover {
-    background-color: #AFEEEE;
-    transform: translateY(-2px);
-}
-button.correct {
-    background-color: #228B22;
-}
-button.wrong {
-    background-color: #FA8072;
-}
-
-/* Game Container */
 .game-container {
-    text-align: center;
-    display: grid;
-    grid-template-columns: auto auto auto;
-    align-items: start;
-    justify-content: center;
-    gap: 24px;
-    transition: all 0.3s ease;
+    max-width: 600px;
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+}
+.game-columns {
+    display: flex;
+    justify-content: space-between;
+    height: 360px;
 }
 
-/* Example Display */
+/* Example block styles */
+.example-container {
+    display: flex;
+    flex-direction: column;
+}
 .example {
     font-size: 24px;
-    margin-bottom: 20px;
-    transition: opacity 0.3s ease-in-out;
-}
-
-/* Input Container */
-.input-container {
+    margin-bottom: 8px;
     display: flex;
-    flex-direction: column;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
 }
-input {
-    font-size: 18px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+.answer-input {
+    font-size: 20px;
     width: 100px;
-    text-align: center;
-    transition: all 0.3s ease;
+    padding: 0;
+    margin: 0;
 }
-input.invalid {
-    border-color: #FA8072;
-}
-
-/* Block Container for Animations */
-.block-container {
-    position: relative;
-    margin-top: 30px;
-    height: 200px;
-    overflow: hidden;
-    transition: all 0.3s ease;
-}
-.block {
-    position: absolute;
-    top: -50px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 50px;
-    height: 50px;
-    background-color: #FFD700;
-    border-radius: 5px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 18px;
-    font-weight: bold;
-    animation: moveToSchema 0.5s ease forwards;
-}
-.fade-in {
-    opacity: 0;
-    animation: fadeIn 500ms forwards;
-}
-.show {
-    opacity: 1;
+.answer-input:disabled {
+    background-color: lightgray;
 }
 
-/* Cube Container */
-#cubeContainer {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-top: 20px;
-    transition: opacity 0.3s ease;
-}
-.row {
-    display: flex;
-    gap: 10px;
-    transition: all 0.3s ease;
+/* Cube block styles */
+.cubes-container {
+    display: grid;
+    grid-template-columns: repeat(4, auto);
+    justify-items: end;
+    gap: 8px;
 }
 .cube {
-    width: 30px;
-    height: 30px;
-    background-color: #4caf50;
-    border-radius: 5px;
+    width: 28px;
+    height: 28px;
+    background-color: #4CAF50;
     opacity: 0;
-    animation: fadeIn 0.5s forwards;
+    animation: none;
 }
 
-/* Hint Button Styles */
-#hintButton {
-    font-size: 18px;
-    padding: 10px 20px;
-    margin-top: 20px;
-    border: none;
-    border-radius: 5px;
-    background-color: #FFD700;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-#hintButton:hover {
-    background-color: #FFCC00;
-}
-#hintButton.hint-highlight {
-    background-color: #FF6347;
-    transition: background-color 0.3s;
-}
-
-/* Animations */
-@keyframes moveToSchema {
-    100% {
-        top: 150px;
+/* Animation for falling cubes */
+@keyframes fall {
+    0% {
+        transform: translateY(100px);
+        opacity: 0;
     }
-}
-@keyframes fadeIn {
     100% {
+        transform: translateY(0);
         opacity: 1;
     }
 }
 
-/* Disabled Submit Button */
-#submit:disabled {
+/* Button styles */
+button.submit-btn {
+    margin: 0 auto;
+    padding: 10px;
+    font-size: 16px;
+    margin-top: 20px;
     background-color: #A9A9A9;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+button.submit-btn.right {
+    background-color: #228B22;
+}
+button.submit-btn.enabled {
+    background-color: #228B22;
+    cursor: pointer;
+}
+button.submit-btn.wrong {
+    background-color: #FA8072;
+}
+button.submit-btn:hover {
+    background-color: #AFEEEE;
+}
+button.submit-btn:disabled {
+    background-color: #A9A9A9;
+    cursor: not-allowed;
 }

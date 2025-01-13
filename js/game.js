@@ -1,138 +1,111 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const examples = [
-        { multiplier: 3, number: 3 },
-        { multiplier: 5, number: 7 },
-        { multiplier: 2, number: 7 },
-        { multiplier: 7, number: 2 },
-        { multiplier: 4, number: 6 }
-    ];
-
+    const N = 4;
+    const examples = Array.from({ length: 10 }, (_, i) => ({ question: `${N} × ${i + 1}`, answer: N * (i + 1) }));
     let currentExampleIndex = 0;
-    const maxExampleIndex = examples.length - 1;
-    
-    const example = document.getElementById('example');
-    const answerInput = document.getElementById('answer');
-    const submitButton = document.getElementById('submit');
-    const cubeContainer = document.getElementById('cubeContainer');
-    const hintButton = document.getElementById('hintButton');
-    const currentExample = document.getElementById('currentExample');
-    const nextExample = document.getElementById('nextExample');
-    const prevExampleBtn = document.getElementById('prevExample');
-    const nextExampleBtn = document.getElementById('nextExampleBtn');
 
-    let currentState = null;
+    const submitBtn = document.getElementById("submit-btn");
+    const cubesContainer = document.querySelector(".cubes-container");
+    const exampleContainer = document.querySelector(".example-container");
 
-    function updateExamples() {
-        const current = examples[currentExampleIndex];
-
-        const exampleText = document.createElement('span');
-        exampleText.id = 'exampleText';
-        exampleText.textContent = `${current.number} × ${current.multiplier} = ?`;
-
-        const oldExampleText = document.getElementById('exampleText');
-        if (oldExampleText) {
-            oldExampleText.classList.remove('show');
-        }
-    
-        example.innerHTML = ''; 
-        example.appendChild(exampleText);
-    
-        setTimeout(() => {
-            exampleText.classList.add('fade-in');
-        }, 10);
-    
-        currentExample.textContent = `Current: ${current.number} × ${current.multiplier} = ?`;
-        nextExample.textContent = `Next: ${examples[currentExampleIndex + 1] ? `${examples[currentExampleIndex + 1].number} × ${examples[currentExampleIndex + 1].multiplier} = ?` : 'End'}`;
-    
-        if (currentState === 0) {
-            cubeContainer.innerHTML = '';
-        }
-    
-        if (currentState !== null) {
-            setTimeout(() => {
-                currentState = null;
-                submitButton.classList.remove('correct', 'wrong');
-                answerInput.classList.remove('invalid');
-                answerInput.value = '';
-                updateExamples();
-            }, 1000);
-        }
-    }
-
-    function createHintCubes(rows, cubesPerRow) {
-        cubeContainer.innerHTML = '';
-        for (let i = 0; i < rows; i++) {
-            const row = document.createElement('div');
-            row.classList.add('row');
-            for (let j = 0; j < cubesPerRow; j++) {
-                const cube = document.createElement('div');
-                cube.classList.add('cube');
-                row.appendChild(cube);
+    function addCubes(answer) {
+        const cubesToAdd = answer - cubesContainer.children.length;
+        if (cubesToAdd > 0) {
+            const fragment = document.createDocumentFragment();
+            for (let i = 0; i < cubesToAdd; i++) {
+                const cube = document.createElement("div");
+                cube.classList.add("cube");
+                fragment.appendChild(cube);
             }
-            cubeContainer.appendChild(row);
+            cubesContainer.appendChild(fragment);
+            setTimeout(() => {
+                const cubes = cubesContainer.querySelectorAll('.cube');
+                cubes.forEach((cube, index) => {
+                    cube.style.animation = `fall 0.5s ease-out ${index * 0.05}s forwards`;
+                });
+            }, 100);
         }
     }
 
-    function checkAnswer() {
-        const current = examples[currentExampleIndex];
-        const userAnswer = parseInt(answerInput.value, 10);
-        const correctAnswer = current.number * current.multiplier;
+    function nextExample() {
+        if (currentExampleIndex < examples.length) {
+            const example = examples[currentExampleIndex];
+            const newExampleDiv = document.createElement("div");
+            newExampleDiv.classList.add("example");
 
-        if (userAnswer === correctAnswer) {
-            submitButton.classList.add('correct');
-            currentState = 0;
-
-            const exampleText = document.getElementById('exampleText');
-            exampleText.textContent = `${current.number} × ${current.multiplier} = ${userAnswer}`;
-
+            const exampleText = document.createElement("div");
+            exampleText.classList.add("example-text");
+            exampleText.textContent = example.question + " = ";
+        
+            const newInputField = document.createElement("input");
+            newInputField.type = "number";
+            newInputField.classList.add("answer-input");
+            newInputField.setAttribute("data-answer", example.answer);
+            newExampleDiv.append(exampleText, newInputField);
+        
+            exampleContainer.appendChild(newExampleDiv);
+        
+            newExampleDiv.style.opacity = 0;
             setTimeout(() => {
-                if (currentExampleIndex < maxExampleIndex) {
-                    currentExampleIndex++;
-                }
-                updateExamples();
-            }, 1000);
-        } else {
-            submitButton.classList.add('wrong');
-            answerInput.classList.add('invalid');
-            hintButton.classList.add('hint-highlight');
-            setTimeout(() => {
-                hintButton.classList.remove('hint-highlight');
-            }, 1000); 
-            currentState = 1;
-            updateExamples();
-        }
-    }
-
-    prevExampleBtn.addEventListener('click', () => {
-        if (currentExampleIndex > 0) {
-            currentExampleIndex--;
-            currentState = null;
-            updateExamples();
-        }
-    });
-
-    nextExampleBtn.addEventListener('click', () => {
-        if (currentExampleIndex < maxExampleIndex) {
+                newExampleDiv.style.opacity = 1;
+                newExampleDiv.style.transition = 'opacity 0.5s ease-in';
+            }, 0);
+        
+            newInputField.addEventListener("input", () => {
+                submitBtn.disabled = !newInputField.value.trim();
+            });
+        
+            addCubes(example.answer);
+            newInputField.focus();
             currentExampleIndex++;
-            currentState = null;
-            updateExamples();
+        }
+    }
+
+    function handleAnswerSubmit() {
+        const currentInputField = document.querySelector(".answer-input");
+        const correctAnswer = parseInt(currentInputField.getAttribute("data-answer"));
+        const userAnswer = parseInt(currentInputField.value);
+    
+        if (userAnswer === correctAnswer) {
+            submitBtn.classList.remove("wrong");
+            submitBtn.classList.add("right");
+            currentInputField.replaceWith(document.createTextNode(correctAnswer));
+        
+            setTimeout(() => {
+                addCubes(correctAnswer);
+                nextExample();
+                submitBtn.classList.remove("right");
+                submitBtn.disabled = true;
+            }, 500);
+        } else {
+            submitBtn.classList.add("wrong");
+            currentInputField.style.color = "red";
+        
+            setTimeout(() => {
+                submitBtn.classList.remove("wrong");
+                currentInputField.style.color = "black";
+            }, 1000);
+        }
+    }
+
+    function initializeGame() {
+        nextExample();
+        submitBtn.disabled = true;
+    }
+
+    submitBtn.addEventListener("click", handleAnswerSubmit);
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' && !submitBtn.disabled) {
+            handleAnswerSubmit();
         }
     });
 
-    answerInput.addEventListener('input', () => {
-        submitButton.disabled = !answerInput.value;
+    submitBtn.addEventListener('mouseover', () => {
+        if (!submitBtn.disabled) submitBtn.style.backgroundColor = '#AFEEEE';
     });
 
-    submitButton.addEventListener('click', () => {
-        checkAnswer();
+    submitBtn.addEventListener('mouseout', () => {
+        if (!submitBtn.disabled) submitBtn.style.backgroundColor = submitBtn.classList.contains("right") ? "#228B22" : "#A9A9A9";
     });
 
-    hintButton.addEventListener('click', () => {
-        const current = examples[currentExampleIndex];
-        const rows = current.multiplier; 
-        const cubesPerRow = current.number;
-        createHintCubes(rows, cubesPerRow);
-    });
-
-    updateExamples();
+    initializeGame();
 });

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Multiplier Game</title>
     <style>
-        /* reset style */
+        /* Reset styles */
         html, body, div, span, applet, object, iframe,
         h1, h2, h3, h4, h5, h6, p, blockquote, pre,
         a, abbr, acronym, address, big, cite, code,
@@ -19,391 +19,242 @@
         figure, figcaption, footer, header, hgroup, 
         menu, nav, output, ruby, section, summary,
         time, mark, audio, video {
-        	margin: 0;
-        	padding: 0;
-        	border: 0;
-        	font-size: 100%;
-        	font: inherit;
-        	vertical-align: baseline;
-        }
-        article, aside, details, figcaption, figure, 
-        footer, header, hgroup, menu, nav, section {
-        	display: block;
-        }
-        body {
-        	line-height: 1;
-        }
-        ol, ul {
-        	list-style: none;
-        }
-        blockquote, q {
-        	quotes: none;
-        }
-        blockquote:before, blockquote:after,
-        q:before, q:after {
-        	content: '';
-        	content: none;
-        }
-        table {
-        	border-collapse: collapse;
-        	border-spacing: 0;
+            margin: 0;
+            padding: 0;
+            border: 0;
+            font-size: 100%;
+            font: inherit;
+            vertical-align: baseline;
         }
 
-        /* General Layout */
+        /* General layout */
         body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f1f1f1;
+        }
+        .game-container {
+            max-width: 600px;
+            width: 100%;
+            margin: 0 auto;
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            min-height: 100vh;
-            transition: all 0.3s ease;
         }
-
-        /* Gamebar Styles */
-        .gamebar {
-            width: 250px;
-            margin-right: 20px;
-            padding: 20px;
-            background-color: #e6f7ff;
-            border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-        }
-        .gamebar h3 {
-            font-size: 18px;
-            margin-bottom: 10px;
-            text-align: center;
-        }
-        .gamebar .current,
-        .gamebar .next {
-            font-size: 16px;
-            margin-bottom: 15px;
-        }
-        .status {
-            font-size: 16px;
-            margin-top: 10px;
-            text-align: center;
-        }
-        .progress-bar {
+        .game-columns {
             display: flex;
             justify-content: space-between;
-            margin-top: 20px;
-            transition: all 0.3s ease;
+            height: 360px;
         }
 
-        /* Button Styles */
-        button {
-            font-size: 16px;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            background-color: transparent;
-            transition: background-color 0.3s, transform 0.3s ease;
+        /* Example block styles */
+        .example-container {
+            display: flex;
+            flex-direction: column;
         }
-        button:disabled {
-            background-color: #A9A9A9;
-            cursor: not-allowed;
-        }
-        button:hover {
-            background-color: #AFEEEE;
-            transform: translateY(-2px);
-        }
-        button.correct {
-            background-color: #228B22;
-        }
-        button.wrong {
-            background-color: #FA8072;
-        }
-
-        /* Game Container */
-        .game-container {
-            text-align: center;
-            display: grid;
-            grid-template-columns: auto auto auto;
-            align-items: start;
-            justify-content: center;
-            gap: 24px;
-            transition: all 0.3s ease;
-        }
-
-        /* Example Display */
         .example {
             font-size: 24px;
-            margin-bottom: 20px;
-            transition: opacity 0.3s ease-in-out;
-        }
-
-        /* Input Container */
-        .input-container {
+            margin-bottom: 8px;
             display: flex;
-            flex-direction: column;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
-        input {
-            font-size: 18px;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+        .answer-input {
+            font-size: 20px;
             width: 100px;
-            text-align: center;
-            transition: all 0.3s ease;
+            padding: 0;
+            margin: 0;
         }
-        input.invalid {
-            border-color: #FA8072;
-        }
-
-        /* Block Container for Animations */
-        .block-container {
-            position: relative;
-            margin-top: 30px;
-            height: 200px;
-            overflow: hidden;
-            transition: all 0.3s ease;
-        }
-        .block {
-            position: absolute;
-            top: -50px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 50px;
-            height: 50px;
-            background-color: #FFD700;
-            border-radius: 5px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 18px;
-            font-weight: bold;
-            animation: moveToSchema 0.5s ease forwards;
-        }
-        .fade-in {
-            opacity: 0;
-            animation: fadeIn 500ms forwards;
-        }
-        .show {
-            opacity: 1;
+        .answer-input:disabled {
+            background-color: lightgray;
         }
 
-        /* Cube Container */
-        #cubeContainer {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-top: 20px;
-            transition: opacity 0.3s ease;
-        }
-        .row {
-            display: flex;
-            gap: 10px;
-            transition: all 0.3s ease;
+        /* Cube block styles */
+        .cubes-container {
+            display: grid;
+            grid-template-columns: repeat(4, auto);
+            justify-items: end;
+            gap: 8px;
         }
         .cube {
-            width: 30px;
-            height: 30px;
-            background-color: #4caf50;
-            border-radius: 5px;
+            width: 28px;
+            height: 28px;
+            background-color: #4CAF50;
             opacity: 0;
-            animation: fadeIn 0.5s forwards;
+            animation: none;
         }
 
-        /* Hint Button Styles */
-        #hintButton {
-            font-size: 18px;
-            padding: 10px 20px;
-            margin-top: 20px;
-            border: none;
-            border-radius: 5px;
-            background-color: #FFD700;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        #hintButton:hover {
-            background-color: #FFCC00;
-        }
-        #hintButton.hint-highlight {
-            background-color: #FF6347;
-            transition: background-color 0.3s;
-        }
-
-        /* Animations */
-        @keyframes moveToSchema {
-            100% {
-                top: 150px;
+        /* Animation for falling cubes */
+        @keyframes fall {
+            0% {
+                transform: translateY(100px);
+                opacity: 0;
             }
-        }
-        @keyframes fadeIn {
             100% {
+                transform: translateY(0);
                 opacity: 1;
             }
         }
 
-        /* Disabled Submit Button */
-        #submit:disabled {
+        /* Button styles */
+        button.submit-btn {
+            margin: 0 auto;
+            padding: 10px;
+            font-size: 16px;
+            margin-top: 20px;
             background-color: #A9A9A9;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button.submit-btn.right {
+            background-color: #228B22;
+        }
+        button.submit-btn.enabled {
+            background-color: #228B22;
+            cursor: pointer;
+        }
+        button.submit-btn.wrong {
+            background-color: #FA8072;
+        }
+        button.submit-btn:hover {
+            background-color: #AFEEEE;
+        }
+        button.submit-btn:disabled {
+            background-color: #A9A9A9;
+            cursor: not-allowed;
         }
     </style>
 </head>
 <body>
     <div class="game-container">
-        <div class="gamebar">
-            <h3>Examples</h3>
-            <div class="current" id="currentExample">Current: 2 × 1 = ?</div>
-            <div class="next" id="nextExample">Next: 2 × 2 = ?</div>
-            <div class="progress-bar" id="progressBar">
-                <button id="prevExample">Previous</button>
-                <button id="nextExampleBtn">Next</button>
+        <div class="game-columns">
+            <div class="column left-column">
+                <div class="example-container"></div>
+            </div>
+    
+            <div class="column right-column">
+                <div class="cubes-container"></div>
             </div>
         </div>
-        <div class="game">
-            <div class="example" id="example">2 × 1 = ?</div>
-            <div class="input-container">
-                <input type="number" id="answer" placeholder="Enter your answer">
-                <button id="submit" disabled>Check</button>
-            </div>
-            <div class="block-container" id="cubeContainer"></div>
-            <button id="hintButton">Get Hint</button>
-        </div>
+    
+        <button id="submit-btn" class="submit-btn">Done</button>
     </div>
-
+    
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const examples = [
-                { multiplier: 3, number: 3 },
-                { multiplier: 5, number: 7 },
-                { multiplier: 2, number: 7 },
-                { multiplier: 7, number: 2 },
-                { multiplier: 4, number: 6 }
-            ];
-
+            const N = 4;
+            const examples = Array.from({ length: 10 }, (_, i) => ({ question: `${N} × ${i + 1}`, answer: N * (i + 1) }));
             let currentExampleIndex = 0;
-            const maxExampleIndex = examples.length - 1;
-            
-            const example = document.getElementById('example');
-            const answerInput = document.getElementById('answer');
-            const submitButton = document.getElementById('submit');
-            const cubeContainer = document.getElementById('cubeContainer');
-            const hintButton = document.getElementById('hintButton');
-            const currentExample = document.getElementById('currentExample');
-            const nextExample = document.getElementById('nextExample');
-            const prevExampleBtn = document.getElementById('prevExample');
-            const nextExampleBtn = document.getElementById('nextExampleBtn');
 
-            let currentState = null;
+            const submitBtn = document.getElementById("submit-btn");
+            const cubesContainer = document.querySelector(".cubes-container");
+            const exampleContainer = document.querySelector(".example-container");
 
-            function updateExamples() {
-                const current = examples[currentExampleIndex];
-
-                const exampleText = document.createElement('span');
-                exampleText.id = 'exampleText';
-                exampleText.textContent = `${current.number} × ${current.multiplier} = ?`;
-
-                const oldExampleText = document.getElementById('exampleText');
-                if (oldExampleText) {
-                    oldExampleText.classList.remove('show');
-                }
-            
-                example.innerHTML = ''; 
-                example.appendChild(exampleText);
-            
-                setTimeout(() => {
-                    exampleText.classList.add('fade-in');
-                }, 10);
-            
-                currentExample.textContent = `Current: ${current.number} × ${current.multiplier} = ?`;
-                nextExample.textContent = `Next: ${examples[currentExampleIndex + 1] ? `${examples[currentExampleIndex + 1].number} × ${examples[currentExampleIndex + 1].multiplier} = ?` : 'End'}`;
-            
-                if (currentState === 0) {
-                    cubeContainer.innerHTML = '';
-                }
-            
-                if (currentState !== null) {
-                    setTimeout(() => {
-                        currentState = null;
-                        submitButton.classList.remove('correct', 'wrong');
-                        answerInput.classList.remove('invalid');
-                        answerInput.value = '';
-                        updateExamples();
-                    }, 1000);
-                }
-            }
-
-            function createHintCubes(rows, cubesPerRow) {
-                cubeContainer.innerHTML = '';
-                for (let i = 0; i < rows; i++) {
-                    const row = document.createElement('div');
-                    row.classList.add('row');
-                    for (let j = 0; j < cubesPerRow; j++) {
-                        const cube = document.createElement('div');
-                        cube.classList.add('cube');
-                        row.appendChild(cube);
+            function addCubes(answer) {
+                const cubesToAdd = answer - cubesContainer.children.length;
+                if (cubesToAdd > 0) {
+                    const fragment = document.createDocumentFragment();
+                    for (let i = 0; i < cubesToAdd; i++) {
+                        const cube = document.createElement("div");
+                        cube.classList.add("cube");
+                        fragment.appendChild(cube);
                     }
-                    cubeContainer.appendChild(row);
+                    cubesContainer.appendChild(fragment);
+                    setTimeout(() => {
+                        const cubes = cubesContainer.querySelectorAll('.cube');
+                        cubes.forEach((cube, index) => {
+                            cube.style.animation = `fall 0.5s ease-out ${index * 0.05}s forwards`;
+                        });
+                    }, 100);
                 }
             }
+        
+            function nextExample() {
+                if (currentExampleIndex < examples.length) {
+                    const example = examples[currentExampleIndex];
+                    const newExampleDiv = document.createElement("div");
+                    newExampleDiv.classList.add("example");
 
-            function checkAnswer() {
-                const current = examples[currentExampleIndex];
-                const userAnswer = parseInt(answerInput.value, 10);
-                const correctAnswer = current.number * current.multiplier;
-
-                if (userAnswer === correctAnswer) {
-                    submitButton.classList.add('correct');
-                    currentState = 0;
-
-                    const exampleText = document.getElementById('exampleText');
-                    exampleText.textContent = `${current.number} × ${current.multiplier} = ${userAnswer}`;
-
+                    const exampleText = document.createElement("div");
+                    exampleText.classList.add("example-text");
+                    exampleText.textContent = example.question + " = ";
+                
+                    const newInputField = document.createElement("input");
+                    newInputField.type = "number";
+                    newInputField.classList.add("answer-input");
+                    newInputField.setAttribute("data-answer", example.answer);
+                    newExampleDiv.append(exampleText, newInputField);
+                
+                    exampleContainer.appendChild(newExampleDiv);
+                
+                    newExampleDiv.style.opacity = 0;
                     setTimeout(() => {
-                        if (currentExampleIndex < maxExampleIndex) {
-                            currentExampleIndex++;
-                        }
-                        updateExamples();
-                    }, 1000);
-                } else {
-                    submitButton.classList.add('wrong');
-                    answerInput.classList.add('invalid');
-                    hintButton.classList.add('hint-highlight');
-                    setTimeout(() => {
-                        hintButton.classList.remove('hint-highlight');
-                    }, 1000); 
-                    currentState = 1;
-                    updateExamples();
-                }
-            }
-
-            prevExampleBtn.addEventListener('click', () => {
-                if (currentExampleIndex > 0) {
-                    currentExampleIndex--;
-                    currentState = null;
-                    updateExamples();
-                }
-            });
-
-            nextExampleBtn.addEventListener('click', () => {
-                if (currentExampleIndex < maxExampleIndex) {
+                        newExampleDiv.style.opacity = 1;
+                        newExampleDiv.style.transition = 'opacity 0.5s ease-in';
+                    }, 0);
+                
+                    newInputField.addEventListener("input", () => {
+                        submitBtn.disabled = !newInputField.value.trim();
+                    });
+                
+                    addCubes(example.answer);
+                    newInputField.focus();
                     currentExampleIndex++;
-                    currentState = null;
-                    updateExamples();
+                }
+            }
+        
+            function handleAnswerSubmit() {
+                const currentInputField = document.querySelector(".answer-input");
+                const correctAnswer = parseInt(currentInputField.getAttribute("data-answer"));
+                const userAnswer = parseInt(currentInputField.value);
+            
+                if (userAnswer === correctAnswer) {
+                    submitBtn.classList.remove("wrong");
+                    submitBtn.classList.add("right");
+                    currentInputField.replaceWith(document.createTextNode(correctAnswer));
+                
+                    setTimeout(() => {
+                        addCubes(correctAnswer);
+                        nextExample();
+                        submitBtn.classList.remove("right");
+                        submitBtn.disabled = true;
+                    }, 500);
+                } else {
+                    submitBtn.classList.add("wrong");
+                    currentInputField.style.color = "red";
+                
+                    setTimeout(() => {
+                        submitBtn.classList.remove("wrong");
+                        currentInputField.style.color = "black";
+                    }, 1000);
+                }
+            }
+        
+            function initializeGame() {
+                nextExample();
+                submitBtn.disabled = true;
+            }
+        
+            submitBtn.addEventListener("click", handleAnswerSubmit);
+            document.addEventListener('keydown', (event) => {
+                if (event.key === 'Enter' && !submitBtn.disabled) {
+                    handleAnswerSubmit();
                 }
             });
-
-            answerInput.addEventListener('input', () => {
-                submitButton.disabled = !answerInput.value;
+        
+            submitBtn.addEventListener('mouseover', () => {
+                if (!submitBtn.disabled) submitBtn.style.backgroundColor = '#AFEEEE';
             });
-
-            submitButton.addEventListener('click', () => {
-                checkAnswer();
+        
+            submitBtn.addEventListener('mouseout', () => {
+                if (!submitBtn.disabled) submitBtn.style.backgroundColor = submitBtn.classList.contains("right") ? "#228B22" : "#A9A9A9";
             });
-
-            hintButton.addEventListener('click', () => {
-                const current = examples[currentExampleIndex];
-                const rows = current.multiplier; 
-                const cubesPerRow = current.number;
-                createHintCubes(rows, cubesPerRow);
-            });
-
-            updateExamples();
+        
+            initializeGame();
         });
     </script>
 </body>
