@@ -19,8 +19,8 @@ document.addEventListener('DOMContentLoaded', () => {
             cubesContainer.appendChild(fragment);
             setTimeout(() => {
                 const cubes = cubesContainer.querySelectorAll('.cube');
-                cubes.forEach((cube, index) => {
-                    cube.style.animation = `fall 0.5s ease-out ${index * 0.05}s forwards`;
+                cubes.forEach((cube) => {
+                    cube.style.animation = `fall 0.5s ease-out 0s forwards`;
                 });
             }, 100);
         }
