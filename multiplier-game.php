@@ -19,7 +19,7 @@ function multiplier_game_enqueue_scripts() {
         wp_enqueue_style('multiplier-game-style',   plugins_url('/style.css', __FILE__),          array(), multiplier_game_get_file_version('style.css'));
         wp_enqueue_style('game-menu-style',      plugins_url('css/game.css', __FILE__),           array(), multiplier_game_get_file_version('css/game-menu.css'));
 
-        wp_enqueue_script('multiplier-game-script', plugins_url('js/game.js', __FILE__),          array('jquery'), multiplier_game_get_file_version('script.js'), true);
+        wp_enqueue_script('multiplier-game-script', plugins_url('js/game-logic.js', __FILE__),          array('jquery'), multiplier_game_get_file_version('js/game-logic.js'), true);
     }
 }
 add_action('wp_enqueue_scripts', 'multiplier_game_enqueue_scripts');
